@@ -1,0 +1,553 @@
+//Lista de Shells que podemos utilizar
+cat /ect/shells
+
+//Mostra el shell que estamos utilizando actualmente
+echo $SHELL
+
+//Mostrar por pantalla
+echo algoporpantalla
+
+//Editores
+nano - vim (para uso en terminal)
+
+//Ubicacion de la carpeta donde estamos parados
+pwd
+
+//Para movernos por los directorios
+cd directorios
+
+//Crear directorios
+mkdir nombredirectorio
+
+//Para crear archivos
+touch nombredelarchivo -> darle una extencion es -> touch nombre.sh (.tipo)
+//No es necesaria una extencion, solo es un convencion
+
+/*SECCION HOLA MUNDO*/
+
+//Para iniciar un scrip bash
+#! (al inicio llamamos a un programa en especial)
+#! /bin/bash
+
+//Ver archivos de mi directorios
+ls
+ls -al nombredelarchivo -> muestra todos los datos del archivo
+
+//DAR PERMISOS
+chmod +x nombredelarchivo (doy el permiso para ejecutar)
+//Cambia a verde mi archivo
+
+//EJECUTAR
+./programa
+
+/*GUARDAR SALIDA*/
+
+//Podemos guardar datos en archivos y crear
+echo "Hello World" > nombredelarchivodondeguardar(.tipo)
+//Este texto que imprimimos para a guardarse en un archivo
+
+//Para escribir el dato
+cat > hola.txt (archivo(.tipo))
+
+ctrl + d para acabar
+
+nota: Si volvemos a ejecutar se borra lo que escribimos
+
+//Para no perder y contuar
+cat >> hola.txt (archivo(.tipo))
+
+/*COMENTARIOS BASH SCRIP*/
+
+#este es un COMENTARIOS
+
+: 'comentario extenso'
+
+//CAT DELIMITADOR
+cat << myText      //inicio
+esto es un texto
+que se mostrara
+por pantalla
+myText             //cierre
+
+//delimitadores myText
+//le decimos a cat que vamos a insertar algo
+//se pueden repetir
+
+/*READ*/
+read variable
+//guardar lo que el usuario tipe en una variable
+//guardar en un espacio de la memoria
+
+//Similar a un string
+echo "Esta es tu edad: $age"
+//Para unir con lo tipeado, hay que concatenar
+//$ -> no lee un texto, lee la variable
+
+/*CONDICIONALES*/
+
+age = 10    //A la variable le damos un valor
+
+if [ Lo que queremos evaluar ]
+
+//Bash tiene su sintaxis similar a lenguaje ensamblador
+//Importantes los espacion entre []
+
+if [ $age -eq 10 ]
+then                     //lo que hacemos si se cumple
+    echo "Es igual"
+fi                       //cerrar condicional
+
+//Si no cumple y quemos hacer otra cosa
+
+if [ $age -eq 10 ]
+then
+    echo "Es igual"
+else
+    echo "No es igual"
+fi
+
+/CONDICIONALES ASM/
+eq (equal)
+ge (mayor igual)
+le (menor igual)
+gt (mayor que)
+lt (menor que)
+
+//Otra sintaxis
+if (( age == 10 ))
+//Donde podemos usar algo mas 
+//similar a los lenguajes que usamos
+
+//Uso de otras condiciones
+if (( $age == 10 ))
+then
+    echo "Es 10"
+elif  (( $age == 11 ))
+then
+    echo "Es 11"
+fi
+
+/*OPERADORES LOGICOS*/ MIN 32
+//cuando necesitamos proponer que se cumplan mas condiciones
+
+//Version 1
+age=10
+
+# 18 < age < 40
+if [ $age -gt 18 ] && [ $age -lt 40 ]
+then
+    echo "edad valida"
+else
+    echo "edad no valida"
+fi
+
+//Operadores    &&(and)   ||(or)
+
+//Verison 2
+if [[ $age -gt 18 && $age -lt 40 ]]
+
+/*CASE*/
+echo "Elige opcion 1 o 2:"
+read valor
+
+##Case funciona cuando son valores no aritmeticos
+##Es para textos
+case $valor in
+    1)
+        echo "Es el numero 1"
+    ;;         #break
+    2)
+        echo "Es el numero 2"
+    ;;
+    *)
+        echo "Valor incorrecto"
+    ;;
+esac
+
+/*LOOP - BUCLES*/
+
+number=0
+
+##WHILE
+##Esta condicion empieza ciendo verdad y termina falsa
+while [ $number -lt 10 ]
+do
+    echo $number
+    number=$((number + 1))  ##$((number  sumale 1
+done
+
+##UNTIL
+##Esta condicion empieza ciendo falsa y termina verdad
+until [ $number -ge 10 ]
+do
+    echo $number
+    number=$((number + 1))
+done
+
+##FOR
+##NO es practico
+for i in 1 2 3 4 5
+do
+    echo $i
+done
+
+#Le damos un rango 0 a 100 - y los saltos de 10 (incremento)
+for j in {0..100..10}  
+do
+    echo $j
+done
+
+#For con sintaxis similar a lenguajes comunes
+#El incremento puede ser h+=20 o h=h+20
+for (( h=0; h<10; h++ ))
+do
+    echo $h
+done
+
+/*BREAK - CONTINUE*/
+##Supongmaos que tenemos una logica para recorrer elementos
+##Pero si necesitamos acabar con el bucle en un punto
+##O queremos que no se recorran ciertos elementos
+
+#Sintaxis especial BREAK (corta al llegar)
+for (( h=0; h<10; h++ ))
+do
+    if [ $h -gt 5 ]
+    then
+        break
+    fi
+    echo $h
+done
+
+#Sintaxis especial CONTINUE (esquivo esos valores)
+for (( f=0; f<10; f++ ))
+do
+    if [ $f -eq 5 ] || [ $f -eq 6 ]
+    then
+        continue
+    fi
+    echo $f
+done
+
+/*ARGUMENTOS*/
+Si yo tengo un scrip ./
+Al lado puedo pasarle valores
+./scrip.sh hola como estas 10
+
+Mostrar en posicion
+echo $1 $2 $3    ($ lo que esta en posicion)
+No tienen orden, pueden ser 1-4 o 2 4 1 3
+
+Se obtiene una lista de elementos
+./scrip.sh -> es el elemento 0
+
+Si queremos leer mas arguemntos tenemos que usar
+$@ (se lee del primero hacia adelante, no el 0)
+
+$# (cuento cuantos elementos tengo)
+
+Podemos recibir cualquier elemento, pero al procesarlos,
+debo tener una variable a la que pueda accederlo.
+Para poder leer, si  importar los que haya,
+hay que convertirlos en una lista
+
+args=("$@")
+echo "Resultado: ${args[0]} - ${args[1]}" ##Es una cadena
+
+/*STANDAR INPUT*/
+Pasarle un dato a un tipo de programa
+
+/Standar Input
+while read line   ##Mientras vas escribiendo -> imprime
+do
+    echo $line
+done
+
+/Standar Input de un Archivo
+//Para la entrada de un archivo, leer contenido
+while read line
+do
+    echo $line
+done < "${1:-/dev/stdin}"
+
+< (entrada)
+${} (interpretar codigo)
+/dev/stdin (programa incluido en linux)
+1: (recibirlos como primer argumento)
+
+/*STANDAR ERR - STANDAR OUT*/
+Ejemplo, cuando usamos la termina
+Y tipiamos el comando ls, nos muestra el contenido
+de nuestra ruta actual, STANDAR INPUT
+
+Pero si tipeamos lsx (mal), nos da un error
+porque el codigo no existe, STANDAR ERROR
+
+Para guardar el STDOUT o STDERR
+ls 1> file.txt
+Donde quiero que guardar, el STDOUT se recibe en el valor 1 (Salida del Archivo)
+Y luego pongo donde guardarlo file.txt
+
+#Guardo en un archivo el ls
+ls 1> file.txt
+#Otra forma
+ls > archivo.txt
+
+#Guardo en un archivo el ls error
+ls -123 1> file.txt 2> errors.txt   #Error
+
+##Para guardar error concatenar (guardar en mismo archivo)
+ls > archivo.txt 2>archivo.txt
+#Otra forma (guardar en el primer parametro)
+ls > archivo.txt 2>&1
+
+#Guardar ambos (otra forma del anterior)
+ls -123 >& file2.txt
+
+/*PIPES*/
+
+wc (comando - contador de palabras)
+wc file.txt (cuenta todo el contenido de mi txt)
+wc -l file.txt (cuenta las lineas)
+wc -m (para contar caracteres)
+
+| PIPES
+ls -l | sort  (para ordenar)
+ls -l | sort -k5 -rn (ordena por tamaño)
+
+Ejemplo
+echo $mensaje | wc -m
+
+//Para exportar
+export mensaje
+
+//Ejecutar otro script
+./second.sh
+
+/*STRINGS*/
+echo "Ingresar la contraseña:"
+read input1
+echo "Repetir la contraseña:"
+read input2
+
+##Comparaciones de Strings
+if [ $input1 == $input2 ]
+then 
+    echo "Contraseña aceptada"
+else
+    echo "Error,Contraseñas distintas"
+fi
+
+echo "$input1 $input2"
+
+//concatenar
+echo "Ingresar la nombre"
+read name
+echo "Escribe un adjetivo que defina a la persona"
+read adjetive
+
+result="$name es $adjetive"
+echo $result
+
+//convertir todo a minuscula o mayuscula
+echo ${name,,} #,, convierto todo a minuscula
+echo ${name^^} #,, convierto todo a mayuscula
+
+echo ${name,, [AEIOU]} #,, convierto vocales a minuscula
+
+Nota: Comentar rapido Ctrl+k + Ctrl+c
+
+/*NUMBERS*/
+x=10
+y=20
+
+echo $(( x + y ))
+echo $(( x - y ))
+echo $(( x * y ))
+echo $(( x / y ))
+echo $(( x % y ))
+echo "---"
+echo $(( 10 + 20 ))   #$((...)) Interpretar codigo
+echo $(( 10 - 5 ))
+
+#Otra forma
+echo $(expr $x + $y)
+
+#Ojo
+echo $(expr $x \* $y)
+#Nos da un error -> * es un operador de bash debemos agregar \
+
+#Bash no siempre permite valores flotantes
+#Hay que instalar comando bc para que nos de valores flotantes
+
+/*DECLARE*/
+#funcion declare
+#diferencia entre variable y declare
+#declare tiene mas propiedades, de solo lectura, tipo de dato,etc
+#tenemos mas control
+#programas que no deben ser modificados
+declare -r variable=/ect/passwd   #-r solo lectura
+echo $variable
+
+variable=/ect/passwd.txt  #da error porque solo es lectura
+
+/*ARRAY - LISTAS*/
+Lista de elementos
+
+#Elementos que aparecen en un mismo grupo, agruparlos en listas
+#Las listas se definen en () similar a las tuplas
+
+##Escencial para hacer tareas repetitivas - automatizar
+##Enlistar carpetas,recorrerlas,enlistar usuarios
+
+
+names=( "ana" "leo" "noe" "sol" ) #elementos en lista
+echo $names #solo el primero
+echo "Nombres: ${names[*]}" #todos los elementos
+echo "Nombres: ${names[@]}" #todos los elementos
+echo "1re Nombre: ${names[0]}" #elemento 1ro
+echo "Posiciones: ${!names[@]}" #ver el indice
+echo "Total: ${#names[@]}" # con "#" cuento los elementos
+#Imprime el ultimo elemento, al contar el total de los elementos
+#Importante el -1 porque sino me paso
+#Similar a length en java
+echo "Nombres: ${names[${#names[@]}-1]}"
+
+#Recorrer los elementos
+for name in ${names[@]}
+do
+    echo "Mi nombre es: $name"
+done
+
+#Eliminar elementos de la lista
+unset names[1]
+echo "Nombres: ${names[@]}"
+
+#Agregar a la lista
+names[4]="bob"
+echo "Nombres: ${names[@]}"
+
+#Agregar siempre a lo ultimo
+names[${#names[@]}]="bob"
+echo "Nombres: ${names[@]}"
+
+#Otra forma sencilla
+names+=("bob")
+names+=("pep")
+echo "Nombres: ${names[*]}" 
+
+#Añadir elementos a una posicion y actualizarla
+names[2]="bob"
+echo "Nombres: ${names[*]}" 
+
+/*FUNCIONES*/ 1:52:00
+Permite reorganizar el codigo en distintas 
+partes para reutilizar
+
+function sayHello(){
+    local mensaje="Holasss"
+    echo $mensaje
+    echo "Hola $1, edad: $2"
+    echo "Hola mundo"
+}
+
+sayHello
+sayHello jose 30
+sayHello pepe 20
+sayHello leo
+
+#Para un valor que cambie, con variables y mas
+#Ejemplo, pasar argumentos
+#echo "Hola $1"
+
+#Dentro de la funcion podemos crear variables
+#Se puede acceder a la variable porque es global
+#Aun estando fuera de la funcion
+#Hacerla "local" para que solo sirva para la funcion
+#Para no se accedido desde afuera
+
+/*DIRECTORIOS*/
+
+#Busqueda de una carpeta
+echo "Crea el nombre para la directorio:"
+read folder
+if [ -d $folder ]    #SI FOLDER EXISTE
+then
+    echo "El directorio $folder ya existe"
+else
+    echo "El directorio $folder no existe"
+fi
+
+#-d para directorios
+#-f para files o archivos
+
+echo "Nombre del archivo:"
+read file
+
+if [ -f $file ]
+then
+    echo "Escribe el contenido de texto:"
+    read text
+    echo $text >> $file #concatenar/ para reemplzar es >
+else
+    echo "El archivo $file no existe"
+fi
+
+#Podemos leer el contenido del archivo
+echo "Nombre del archivo:"
+read file
+
+if [ -f $file ]    #SI FOLDER EXISTE
+then
+    #mientras - IFS lectura del archivo - -r(modo lectura) - line (linea por linea)
+    while IFS= read -r line
+    do
+        echo $line #lo que lee de cada archivo
+    done < $file #la entrada viene del contenido del archivo
+else
+    echo "El archivo $file no existe"
+fi
+
+#Para eliminar
+echo "Nombre del archivo:"
+read file
+
+if [ -f $file ]    #SI FOLDER EXISTE
+then
+    rm $file #eliminar
+    echo "el archivo fue eliminado"
+else
+    echo "El archivo $file no existe"
+fi
+
+/*CURL*/
+Podemos instalar comandos, no necesariamente para linux
+Si queremos acceder a programas desde bash script
+Escribiendo comandos en el script
+
+comando: curl (peticion de protocolos)
+curl + el link buscado
+
+echo "Ingrese la url"
+read url
+
+curl $url
+
+#Podemos guardar en un archivo
+curl $url > nota.txt
+
+curl $url > imagen.jpg
+
+curl -I $url #Muestra informacion Headers
+
+/*DEBAGEAR - DEBUGGIN*/
+bash -x nombredelarchivo.sh
+Se muestra paso por paso la ejecucion para 
+ver donde podemos tener errores
+
+set -x
+..
+..
+set +x
+
+De donde hasta donde debuggear

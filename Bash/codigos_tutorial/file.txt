@@ -1,0 +1,17 @@
+argumentos.sh
+case.sh
+comandocat.sh
+condicionales.sh
+continue_break.sh
+errors.txt
+file.txt
+guardarhello.sh
+helloworld.sh
+hola2.txt
+hola.txt
+loop.sh
+operadores_logicos.sh
+output.sh
+read.sh
+stderr_stdout.sh
+stdin.sh
